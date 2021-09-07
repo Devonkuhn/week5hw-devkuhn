@@ -5,6 +5,7 @@ $( document ).ready(function() {
 var currentTime = moment().format('dddd MMMM Do, h A');
 var currentHour = moment().format("h A")
 
+
 $("#currentDay").text(currentTime);
 
 var workdayTimeline = [
@@ -22,6 +23,8 @@ var workdayTimeline = [
 var tasks = JSON.parse(localStorage.getItem("workday"));
 if (tasks) {
     workdayTimeline = tasks;
+
+localStorage.setItem("workday", JSON.stringify(workdayTimeline));
 }
 
 workdayTimeline.forEach(function(timeblock, index) {
@@ -35,8 +38,37 @@ workdayTimeline.forEach(function(timeblock, index) {
 		'</div><textarea class="form-control ' +
 		color +
 		'">' +
-		timeBlock.event +
+		timeblock.event +
 		'</textarea><div class="col-sm col-lg-1 input-group-append"><button class="saveBtn btn-block" type="submit"><i class="fas fa-save"></i></button></div></div></div>';
 
 	$(".container").append(row);
+});
+
+function colorRow(time) {
+	var eventNow = moment(currentHour, "H A");
+	var eventEntry = moment(time, "H A");
+	if (eventNow.isBefore(eventEntry) === true) {
+		return "future";
+	} else if (eventNow.isAfter(eventEntry) === true) {
+		return "past";
+	} else {
+		return "present";
+	}
+}
+
+$(".saveBtn").on("click", function() {
+	var block = parseInt(
+		$(this)
+			.closest(".time-block")
+			.attr("id")
+	);
+	var userEntry = $.trim(
+		$(this)
+			.parent()
+			.siblings("textarea")
+			.val()
+	);
+	workdayTimeline[block].event = userEntry;
+
+	
 });
