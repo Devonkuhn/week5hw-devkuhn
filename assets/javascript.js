@@ -18,3 +18,25 @@ var workdayTimeline = [
     { time: "4 PM", event: "" },
     { time: "5 PM", event: "" },
 ];
+
+var tasks = JSON.parse(localStorage.getItem("workday"));
+if (tasks) {
+    workdayTimeline = tasks;
+}
+
+workdayTimeline.forEach(function(timeblock, index) {
+    var label = timeblock.time;
+    var color = colorRow(label);
+    var row = 
+        '<div class="time-block" id="' +
+	    index +
+	    '"><div class="row no-gutters input-group"><div class="col-sm col-lg-1 input-group-prepend hour justify-content-sm-end pr-3 pt-3">' +
+		label +
+		'</div><textarea class="form-control ' +
+		color +
+		'">' +
+		timeBlock.event +
+		'</textarea><div class="col-sm col-lg-1 input-group-append"><button class="saveBtn btn-block" type="submit"><i class="fas fa-save"></i></button></div></div></div>';
+
+	$(".container").append(row);
+});
